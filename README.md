@@ -42,8 +42,6 @@
 - [ ] Categorical and Numeric Data
 - [ ] Visualizing Multiple Variables
 
-### Summary
-
 ## Chapter 2. Data and Sampling Distributions
 
 ### Random Sampling and Sample Bias
@@ -88,8 +86,6 @@
 - [ ] Exponential Distribution
 - [ ] Estimating the Failure Rate
 - [ ] Weibull Distribution
-
-### Summary
 
 ## Chapter 3. Statistical Experiments and Significance Testing
 
@@ -142,8 +138,6 @@
 
 - [ ] Sample Size
 
-### Summary
-
 ## Chapter 4. Regression and Prediction
 
 ### Simple Linear Regression
@@ -192,8 +186,6 @@
 - [ ] Splines
 - [ ] Generalized Additive Models
 
-### Summary
-
 ## Chapter 5. Classification
 
 ### Naive Bayes
@@ -235,8 +227,6 @@
 - [ ] Cost-Based Classification
 - [ ] Exploring the Predictions
 
-### Summary
-
 ## Chapter 6. Statistical Machine Learning
 
 ### K-Nearest Neighbors
@@ -270,8 +260,6 @@
 - [ ] XGBoost
 - [ ] Regularization: Avoiding Overfitting
 - [ ] Hyperparameters and Cross-Validation
-
-### Summary
 
 ## Chapter 7. Unsupervised Learning
 
