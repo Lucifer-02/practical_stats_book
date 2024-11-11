@@ -1,7 +1,7 @@
 ## Chapter 1. Exploratory Data Analysis
 
 ### Elements of Structured Data
-
+abc
 ### Rectangular Data
 
 - [ ] Data Frames and Indexes
