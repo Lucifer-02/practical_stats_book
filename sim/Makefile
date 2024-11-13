@@ -1,2 +1,3 @@
 run:
-	zig build run
+	clear
+	zig build test
