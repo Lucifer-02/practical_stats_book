@@ -9,7 +9,7 @@
 
 ### Estimates of Location
 
-- [ ] Mean
+- [x] Mean
 - [ ] Median and Robust Estimates
 - [ ] Example: Location Estimates of Population and Murder Rates
 
