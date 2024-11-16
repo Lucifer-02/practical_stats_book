@@ -1,8 +1,8 @@
 const std = @import("std");
-const mean = @import("chap1.zig").weightedMean;
+const median = @import("chap1.zig").median;
 
 pub fn main() !void {
-    const data = [_]i32{ 1, 2, 3 };
-    const weights = [_]f16{ 1, 2, 3 };
-    std.debug.print("Mean of {d} is {d}\n", .{ data, mean(i32, &data, &weights) });
+    // const data = [_]f32{ 1, 2, 3, 4 };
+    // std.debug.print("Median of {d} is {d}\n", .{ data, median(@TypeOf(data[0]), &data) });
+    std.debug.print("{d}", .{@as(f16, @floatFromInt(10)) / 3});
 }

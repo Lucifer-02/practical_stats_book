@@ -64,6 +64,35 @@ pub fn weightedMean(comptime T: type, data: []const T, weights: []const f16) f64
     return weighted / sum_weights;
 }
 
+pub fn median(comptime T: type, data: []const T) f64 {
+    assert(data.len > 1);
+
+    //Make a copy
+    const allocator = std.heap.page_allocator;
+    const copy = allocator.dupe(T, data) catch {
+        @panic("Can't make a copy");
+    };
+    defer allocator.free(copy);
+
+    std.mem.sort(T, copy, {}, comptime std.sort.asc(T));
+
+    switch (T) {
+        i16, i32, i64 => if (data.len % 2 == 1) {
+            return @as(f64, @floatFromInt(data[data.len / 2]));
+        } else {
+            return @as(f64, @floatFromInt(data[(data.len / 2) - 1] + data[data.len / 2])) / 2;
+        },
+
+        f16, f32, f64 => if (data.len % 2 == 1) {
+            return data[data.len / 2];
+        } else {
+            return (data[(data.len / 2) - 1] + data[data.len / 2]) / 2;
+        },
+
+        else => @compileError("Not support this type!"),
+    }
+}
+
 test "test mean 1" {
     const data = [_]f32{ 1, 2, 3 };
     try testing.expect(mean(f32, &data) == 2);
@@ -110,4 +139,12 @@ test "test weighted mean 3" {
     const data = [_]f32{ 2, 4 };
     const weights = [_]f16{ 0.5, 0.5 };
     try testing.expect(weightedMean(@TypeOf(data[0]), &data, &weights) == 3.0);
+}
+test "test median 1" {
+    const data = [_]f32{ 2, 4 };
+    try testing.expect(median(@TypeOf(data[0]), &data) == 3);
+}
+test "test median 2" {
+    const data = [_]i32{ 2, 3 };
+    try testing.expect(median(@TypeOf(data[0]), &data) == 2.5);
 }
