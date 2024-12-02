@@ -1,18 +1,21 @@
 // #include <Python.h>
 #include "/usr/include/python3.10/numpy/arrayobject.h"
-#include "chap1.c"
 #include "python3.10/Python.h"
-#include <assert.h>
-#include <stdbool.h>
+
+#include "chap1.c"
 
 // Function to compute the sum of elements in a NumPy array
-static PyObject *mean_list(PyObject *self, PyObject *args) {
+static PyObject *mean_list(PyObject *self, PyObject *args, PyObject *kwargs) {
+  // Define argument names (must be NULL-terminated)
+  static char *kwlist[] = {"array", NULL};
+
   PyObject *input_obj = NULL;
+
   PyArrayObject *array = NULL;
 
-  // Parse the input tuple. "O" expects a Python object.
-  if (!PyArg_ParseTuple(args, "O", &input_obj)) {
-    return NULL;
+  // Parse positional and keyword arguments
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O", kwlist, &input_obj)) {
+    return NULL; // Signal an error
   }
 
   // Interpret the input object as a NumPy array
@@ -24,17 +27,11 @@ static PyObject *mean_list(PyObject *self, PyObject *args) {
     return NULL;
   }
 
-  // Ensure the array is contiguous
-  if (!PyArray_ISCONTIGUOUS(array)) {
-    PyErr_SetString(PyExc_ValueError, "Array must be contiguous.");
-    Py_DECREF(array);
-    return NULL;
-  }
   // Get the number of elements
-  npy_intp size = (size_t)PyArray_SIZE(array);
-  double *data = (double *)PyArray_DATA(array);
+  npy_intp const size = PyArray_SIZE(array);
+  double const *const data = (double *)PyArray_DATA(array);
 
-  double m = mean_double(data, size);
+  double const m = mean_double(data, (size_t)size);
 
   // Clean up
   Py_DECREF(array);
@@ -45,7 +42,9 @@ static PyObject *mean_list(PyObject *self, PyObject *args) {
 
 // Method definitions
 static PyMethodDef MyMethods[] = {
-    {"mean_list", mean_list, METH_VARARGS, "mean elements of a NumPy array."},
+    {"mean_list", (PyCFunction)mean_list, METH_VARARGS | METH_KEYWORDS,
+     "mean elements of a NumPy array."},
+
     {NULL, NULL, 0, NULL} // Sentinel
 };
 
