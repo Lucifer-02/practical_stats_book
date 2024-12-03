@@ -1,12 +1,18 @@
 SOURCE = chap1.c
 OUTPUT = chap1
-FLAGS = -Wall -Wextra
+WARNINGS = -Wall -Wextra
+FLAGS += $(WARNINGS) 
+FLAGS += $(LIBS) 
 
-run: py
+run: py 
+	python3 test.py
 
 compile:
-	clear
-	clang $(FLAGS) $(SOURCE) -o $(OUTPUT) && ./$(OUTPUT)
+	clang $(FLAGS) $(SOURCE) -o $(OUTPUT) 
+
+test:
+	# ./$(OUTPUT)
+	pytest *_test.py
 
 py:
 	pip install .
