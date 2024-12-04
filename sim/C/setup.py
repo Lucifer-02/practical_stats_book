@@ -1,6 +1,13 @@
 from setuptools import setup, Extension
+import numpy
 
-module = Extension("mymodule", sources=["mymodule.c"], undef_macros=["NDEBUG"])
+module = Extension(
+    "mymodule",
+    sources=["mymodule.c"],
+    undef_macros=["NDEBUG"],
+    include_dirs=[numpy.get_include()],  # Include NumPy headers
+)
+
 
 setup(
     name="mymodule",

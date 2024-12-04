@@ -1,6 +1,5 @@
-// #include <Python.h>
-#include "/usr/include/python3.10/numpy/arrayobject.h"
-#include "python3.10/Python.h"
+#include <Python.h>
+#include <numpy/arrayobject.h>
 
 #include "chap1.c"
 #include <stddef.h>
