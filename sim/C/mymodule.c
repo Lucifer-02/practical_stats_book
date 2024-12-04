@@ -69,7 +69,7 @@ static PyObject *trimmed_mean_list(PyObject *self, PyObject *args,
   // Get the number of elements
   npy_intp const size = PyArray_SIZE(array);
   double const *const data = (double *)PyArray_DATA(array);
-
+  
   double const m = trimmed_mean(data, (size_t)size, trim);
 
   // Clean up

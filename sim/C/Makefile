@@ -4,18 +4,22 @@ WARNINGS = -Wall -Wextra
 FLAGS += $(WARNINGS) 
 FLAGS += $(LIBS) 
 
-run: py 
-	python3 test.py
+run: compile
+	./$(OUTPUT)
 
 compile:
 	clang $(FLAGS) $(SOURCE) -o $(OUTPUT) 
 
 test:
+	pytest chap1_test.py
 	# ./$(OUTPUT)
-	pytest *_test.py
 
-py:
+linux-install:
 	pip install .
+
+win-install:
+	py setup.py install
+	
 
 clean:
 	rm -rf build dist *.egg-info *.cpython-311-x86_64-linux-gnu.so __pycache__ $(OUTPUT)
