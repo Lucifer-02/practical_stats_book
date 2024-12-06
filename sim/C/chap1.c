@@ -52,7 +52,7 @@ double median_double(const double array[], const size_t len) {
   }
   memcpy(copy, array, len * sizeof(double));
 
-  qsort(copy, len, sizeof(typeof(copy[0])), double_compare);
+  qsort(copy, len, sizeof(double), double_compare);
 
   double median;
   if (len % 2 == 1) {
@@ -72,16 +72,17 @@ typedef struct {
   const size_t len;
 } Slice;
 
-void print_arr(double *arr, size_t len){
-  for (int i = 0; i < len; ++i){
+void print_arr(double *arr, size_t len) {
+  for (size_t i = 0; i < len; ++i) {
     printf("%lf ", arr[i]);
   }
   printf("\n");
 }
+
 double trimmed_mean(double const array[], size_t const len, size_t const trim) {
   assert(len > trim * 2 && "the trimming not over data length");
 
-  //print_arr(array, len);
+  // print_arr(array, len);
 
   double *const copy = (double *)malloc(len * sizeof(double));
   if (copy == NULL) {
@@ -91,11 +92,11 @@ double trimmed_mean(double const array[], size_t const len, size_t const trim) {
 
   qsort(copy, len, sizeof(double), double_compare);
 
-  //print_arr(copy, len);
+  // print_arr(copy, len);
 
   Slice const trimmed_data = {.pointer = copy + trim, .len = len - 2 * trim};
 
-  //print_arr((double *)trimmed_data.pointer, trimmed_data.len);
+  // print_arr((double *)trimmed_data.pointer, trimmed_data.len);
 
   double const mean = mean_double(trimmed_data.pointer, trimmed_data.len);
 
@@ -112,7 +113,7 @@ double trimmed_mean(double const array[], size_t const len, size_t const trim) {
 bool are_almost_equal(double a, double b, double epsilon) {
   return fabs(a - b) < epsilon;
 }
-void test_mean_double_1() {
+void test_mean_double_1(void) {
 
   const double arr[] = {1, 2, 3};
 
@@ -120,7 +121,7 @@ void test_mean_double_1() {
   assert(are_almost_equal(mean_double(arr, len), 2.0, EPSILON));
 }
 
-void test_median_double_1() {
+void test_median_double_1(void) {
 
   const double arr[] = {2, 1, 3, 4};
   const size_t len = sizeof(arr) / sizeof(arr[0]);
@@ -129,30 +130,33 @@ void test_median_double_1() {
   assert(are_almost_equal(median_double(arr, len), 2.5, EPSILON));
 }
 
-void test_trimmed_mean_1() {
+void test_trimmed_mean_1(void) {
   double const arr[] = {0, 1, 2, 0};
   size_t const len = sizeof(arr) / sizeof(arr[0]);
   size_t const trim = 1;
   // printf("\nMean: %lf\n", trimmed_mean(arr, len, trim));
   assert(trimmed_mean(arr, len, trim) == 0.5);
 }
-void test_trimmed_mean_2() {
-  double const arr[] = {0,0, 1, 2};
+
+void test_trimmed_mean_2(void) {
+  double const arr[] = {0, 0, 1, 2};
   size_t const len = sizeof(arr) / sizeof(arr[0]);
   size_t const trim = 1;
   // printf("\nMean: %lf\n", trimmed_mean(arr, len, trim));
   assert(trimmed_mean(arr, len, trim) == 0.5);
 }
-void test_trimmed_mean_3() {
+
+void test_trimmed_mean_3(void) {
   double const arr[] = {1, 2, 0, 0};
   size_t const len = sizeof(arr) / sizeof(arr[0]);
   size_t const trim = 1;
   // printf("\nMean: %lf\n", trimmed_mean(arr, len, trim));
   assert(trimmed_mean(arr, len, trim) == 0.5);
 }
-int main() {
-  // test_mean_double_1();
-  // test_median_double_1();
+
+int main(void) {
+  test_mean_double_1();
+  test_median_double_1();
   test_trimmed_mean_1();
   test_trimmed_mean_2();
   test_trimmed_mean_3();

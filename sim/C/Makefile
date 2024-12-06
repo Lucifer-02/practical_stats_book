@@ -1,11 +1,11 @@
 SOURCE = chap1.c
 OUTPUT = chap1
-WARNINGS = -Wall -Wextra
+WARNINGS = -Wall -Wextra -pedantic
 FLAGS += $(WARNINGS) 
 FLAGS += $(LIBS) 
 
 run: compile
-	./$(OUTPUT)
+	# ./$(OUTPUT)
 
 compile:
 	clang $(FLAGS) $(SOURCE) -o $(OUTPUT) 
@@ -20,6 +20,8 @@ linux-install:
 win-install:
 	py setup.py install
 	
+wheel:
+	python3 setup.py bdist_wheel
 
 clean:
 	rm -rf build dist *.egg-info *.cpython-311-x86_64-linux-gnu.so __pycache__ $(OUTPUT)
@@ -29,4 +31,3 @@ check:
 	esbmc $(SOURCE)
 	cppcheck $(SOURCE)
 	frama-c -eva $(SOURCE)
-
