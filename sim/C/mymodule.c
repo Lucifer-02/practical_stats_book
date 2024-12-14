@@ -41,7 +41,7 @@ static PyObject *mean_list(PyObject *self, PyObject *args, PyObject *kwargs) {
 }
 
 // Function to compute the sum of elements in a NumPy array
-static PyObject *trimmed_mean_list(PyObject *self, PyObject *args,
+static PyObject *trim_mean_list(PyObject *self, PyObject *args,
                                    PyObject *kwargs) {
   // Define argument names (must be NULL-terminated)
   static char *kwlist[] = {"array", "trim", NULL};
@@ -70,7 +70,7 @@ static PyObject *trimmed_mean_list(PyObject *self, PyObject *args,
   npy_intp const size = PyArray_SIZE(array);
   double const *const data = (double *)PyArray_DATA(array);
   
-  double const m = trimmed_mean(data, (size_t)size, trim);
+  double const m = trim_mean(data, (size_t)size, trim);
 
   // Clean up
   Py_DECREF(array);
@@ -120,8 +120,8 @@ static PyMethodDef MyMethods[] = {
      "Return mean of a NumPy array."},
     {"median_list", (PyCFunction)median_list, METH_VARARGS | METH_KEYWORDS,
      "Return median of a NumPy array."},
-    {"trimmed_mean", (PyCFunction)trimmed_mean_list,
-     METH_VARARGS | METH_KEYWORDS, "Return trimmed mean of a NumPy array."},
+    {"trim_mean", (PyCFunction)trim_mean_list,
+     METH_VARARGS | METH_KEYWORDS, "Return trim mean of a NumPy array."},
 
     {NULL, NULL, 0, NULL} // Sentinel
 };

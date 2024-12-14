@@ -26,19 +26,19 @@ class TestChap1(unittest.TestCase):
         arr = np.array([0])
         self.assertEqual(np.mean(arr), mymodule.mean_list(arr))
 
-    def test_trimmed_mean_1(self):
+    def test_trim_mean_1(self):
         trim = 1
         arr = np.array([0, 1, 2, 0])
         self.assertEqual(
             stats.trim_mean(arr, proportiontocut=trim / len(arr)),
-            mymodule.trimmed_mean(array=arr, trim=1),
+            mymodule.trim_mean(array=arr, trim=1),
         )
 
-    def test_trimmed_mean_2(self):
+    def test_trim_mean_2(self):
         trim = 20
         arr = np.random.rand(1_000_000)
         self.assertAlmostEqual(
             stats.trim_mean(arr, proportiontocut=trim / len(arr)),
-            mymodule.trimmed_mean(array=arr, trim=trim),
+            mymodule.trim_mean(array=arr, trim=trim),
             delta=self.delta,
         )

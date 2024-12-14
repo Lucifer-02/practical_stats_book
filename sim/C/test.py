@@ -15,7 +15,7 @@ end = time()
 print(f"result: {result}, in {end - start}")
 
 start = time()
-result = mymodule.trimmed_mean(array=arr, trim=trim)
+result = mymodule.trim_mean(array=arr, trim=trim)
 end = time()
 print(f"result: {result}, in {end - start}")
 
