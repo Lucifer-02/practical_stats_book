@@ -1,4 +1,5 @@
-#include <Python.h>
+// #include <Python.h>
+#include <python3.10/Python.h>
 #include <numpy/arrayobject.h>
 
 #include "chap1.c"
@@ -29,9 +30,11 @@ static PyObject *mean_list(PyObject *self, PyObject *args, PyObject *kwargs) {
 
   // Get the number of elements
   npy_intp const size = PyArray_SIZE(array);
-  double const *const data = (double *)PyArray_DATA(array);
+  double const *const array_data = (double *)PyArray_DATA(array);
 
-  double const m = mean_double(data, (size_t)size);
+  Slice const data = {.pointer = array_data, .len = size, .item_size = sizeof(double)};
+
+  double const m = mean_double(data);
 
   // Clean up
   Py_DECREF(array);
