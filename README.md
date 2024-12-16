@@ -10,7 +10,7 @@
 ### Estimates of Location
 
 - [x] Mean
-- [ ] Median and Robust Estimates
+- [x] Median and Robust Estimates
 - [ ] Example: Location Estimates of Population and Murder Rates
 
 ### Estimates of Variability
