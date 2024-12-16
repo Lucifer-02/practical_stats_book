@@ -102,7 +102,7 @@ double weighted_mean(Slice const data, Slice const weights) {
 }
 
 // this main function for static analysis and quick test
-
+//
 // int main(void) {
 //
 //   double const arr[] = {0, 1, 2, 0};
