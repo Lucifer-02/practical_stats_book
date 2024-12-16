@@ -1,5 +1,8 @@
 SOURCE = chap1.c
-TEST_SOURCE = chap1_test.c
+C_TEST_SOURCE = chap1_test.c
+C_SOURCE_DIR= src
+PY_TEST_SOURCE = chap1_test.py
+PY_TEST_DIR = py_tests
 OUTPUT = chap1
 
 WARNINGS = -Wall -Wextra -pedantic
@@ -11,11 +14,11 @@ TEST_FUNCTION = mean_double
 run: test
 
 compile:
-	clang $(FLAGS) $(SOURCE) -o $(OUTPUT) 
+	clang $(FLAGS) $(C_SOURCE_DIR)/$(SOURCE) -o $(OUTPUT) 
 
 test:
-	# pytest chap1_test.py
-	clang $(FLAGS) $(TEST_SOURCE) && ./a.out
+	# pytest $(PY_TEST_DIR)/$(PY_TEST_SOURCE)
+	clang $(FLAGS) $(C_SOURCE_DIR)/$(C_TEST_SOURCE) && ./a.out
 
 linux-install:
 	pip install .
