@@ -11,6 +11,11 @@ FLAGS += $(LIBS)
 
 TEST_FUNCTION = mean_double
 
+# this will not work with make, I put it here to save activate venv command
+env:
+	source .mystats/bin/activate
+
+
 run: test
 
 compile:
