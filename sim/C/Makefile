@@ -22,17 +22,20 @@ compile:
 	clang $(FLAGS) $(C_SOURCE_DIR)/$(SOURCE) -o $(OUTPUT) 
 
 test:
-	# pytest $(PY_TEST_DIR)/$(PY_TEST_SOURCE)
 	clang $(FLAGS) $(C_SOURCE_DIR)/$(C_TEST_SOURCE) && ./a.out
+	uv run pytest $(PY_TEST_DIR)/$(PY_TEST_SOURCE)
 
-linux-install:
-	pip install .
+linux-install: uninstall wheel
+	uv pip install ./dist/c-0.1.0-cp311-cp311-linux_x86_64.whl
 
 win-install:
 	py setup.py install
+
+uninstall:
+	rm ./.venv/lib64/python3.11/site-packages/mymodule.cpython-311-x86_64-linux-gnu.so
 	
 wheel:
-	python3 setup.py bdist_wheel
+	uv run setup.py bdist_wheel
 
 clean:
 	rm -rf build dist *.egg-info *.cpython-311-x86_64-linux-gnu.so __pycache__ $(OUTPUT) a.out infer-out/ chap1.o

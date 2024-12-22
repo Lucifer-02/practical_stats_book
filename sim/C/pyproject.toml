@@ -1,0 +1,13 @@
+[project]
+name = "c"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "ipython>=8.31.0",
+    "numpy>=2.2.1",
+    "pytest>=8.3.4",
+    "scipy>=1.14.1",
+    "setuptools>=75.6.0",
+]

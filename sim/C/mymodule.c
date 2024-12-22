@@ -70,9 +70,10 @@ static PyObject *trim_mean_list(PyObject *self, PyObject *args,
 
   // Get the number of elements
   npy_intp const size = PyArray_SIZE(array);
-  double const *const data = (double *)PyArray_DATA(array);
+  double const *const array_data = (double *)PyArray_DATA(array);
   
-  double const m = trim_mean(data, (size_t)size, trim);
+  Slice const data = {.pointer = array_data, .len = size, .item_size = sizeof(double)};
+  double const m = trim_mean(data, trim);
 
   // Clean up
   Py_DECREF(array);
@@ -105,9 +106,10 @@ static PyObject *median_list(PyObject *self, PyObject *args, PyObject *kwargs) {
 
   // Get the number of elements
   npy_intp const size = PyArray_SIZE(array);
-  double const *const data = (double *)PyArray_DATA(array);
+  double const *const array_data = (double *)PyArray_DATA(array);
+  Slice const data = {.pointer = array_data, .len = size, .item_size = sizeof(double)};
 
-  double const m = median_double(data, (size_t)size);
+  double const m = median_double(data);
 
   // Clean up
   Py_DECREF(array);
