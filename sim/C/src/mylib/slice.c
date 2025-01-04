@@ -43,7 +43,7 @@ Slice sorted_slice(Slice const slice) {
 
 void free_slice(Slice const slice) { free(slice.pointer); }
 
-Slice get_slice(Slice const slice, size_t low, size_t high) {
+Slice make_slice(Slice const slice, size_t low, size_t high) {
   return (Slice){.pointer = slice.pointer + low * slice.item_size,
                  .len = high - low,
                  .item_size = slice.item_size};

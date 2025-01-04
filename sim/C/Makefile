@@ -32,7 +32,7 @@ win-install:
 	py setup.py install
 
 uninstall:
-	rm ./.venv/lib64/python3.11/site-packages/mymodule.cpython-311-x86_64-linux-gnu.so
+	rm -f ./.venv/lib64/python3.11/site-packages/mymodule.cpython-311-x86_64-linux-gnu.so
 	
 wheel:
 	uv run setup.py bdist_wheel

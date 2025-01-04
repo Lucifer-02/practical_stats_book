@@ -1,5 +1,5 @@
-#include <python3.10/Python.h>
 #include <numpy/arrayobject.h>
+#include <python3.10/Python.h>
 
 #include "src/chap1.c"
 #include <stddef.h>
@@ -31,7 +31,8 @@ static PyObject *mean_list(PyObject *self, PyObject *args, PyObject *kwargs) {
   npy_intp const size = PyArray_SIZE(array);
   double const *const array_data = (double *)PyArray_DATA(array);
 
-  Slice const data = {.pointer = array_data, .len = size, .item_size = sizeof(double)};
+  Slice const data = {
+      .pointer = (char *)array_data, .len = size, .item_size = sizeof(double)};
 
   double const m = mean_double(data);
 
@@ -44,7 +45,7 @@ static PyObject *mean_list(PyObject *self, PyObject *args, PyObject *kwargs) {
 
 // Function to compute the sum of elements in a NumPy array
 static PyObject *trim_mean_list(PyObject *self, PyObject *args,
-                                   PyObject *kwargs) {
+                                PyObject *kwargs) {
   // Define argument names (must be NULL-terminated)
   static char *kwlist[] = {"array", "trim", NULL};
 
@@ -71,8 +72,9 @@ static PyObject *trim_mean_list(PyObject *self, PyObject *args,
   // Get the number of elements
   npy_intp const size = PyArray_SIZE(array);
   double const *const array_data = (double *)PyArray_DATA(array);
-  
-  Slice const data = {.pointer = array_data, .len = size, .item_size = sizeof(double)};
+
+  Slice const data = {
+      .pointer = (char *)array_data, .len = size, .item_size = sizeof(double)};
   double const m = trim_mean(data, trim);
 
   // Clean up
@@ -81,6 +83,7 @@ static PyObject *trim_mean_list(PyObject *self, PyObject *args,
   // Return the sum as a Python float
   return PyFloat_FromDouble(m);
 }
+
 // Function to compute the sum of elements in a NumPy array
 static PyObject *median_list(PyObject *self, PyObject *args, PyObject *kwargs) {
   // Define argument names (must be NULL-terminated)
@@ -107,7 +110,8 @@ static PyObject *median_list(PyObject *self, PyObject *args, PyObject *kwargs) {
   // Get the number of elements
   npy_intp const size = PyArray_SIZE(array);
   double const *const array_data = (double *)PyArray_DATA(array);
-  Slice const data = {.pointer = array_data, .len = size, .item_size = sizeof(double)};
+  Slice const data = {
+      .pointer = (char *)array_data, .len = size, .item_size = sizeof(double)};
 
   double const m = median_double(data);
 
@@ -118,14 +122,63 @@ static PyObject *median_list(PyObject *self, PyObject *args, PyObject *kwargs) {
   return PyFloat_FromDouble(m);
 }
 
+static PyObject *weighted_mean_list(PyObject *self, PyObject *args,
+                                    PyObject *kwargs) {
+  // Define argument names (must be NULL-terminated)
+  static char *kwlist[] = {"data_list", "weights", NULL};
+
+  PyObject *data_list = NULL;
+  PyObject *weights_list = NULL;
+
+  // Parse positional and keyword arguments
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "OO", kwlist, &data_list,
+                                   &weights_list)) {
+    return NULL; // Signal an error
+  }
+
+  PyArrayObject *data_array = (PyArrayObject *)PyArray_FROM_OTF(
+      data_list, NPY_FLOAT64, NPY_ARRAY_IN_ARRAY);
+  if (data_array == NULL) {
+    PyErr_SetString(PyExc_TypeError,
+                    "Input must be a NumPy array of type float64.");
+    return NULL;
+  }
+
+  PyArrayObject *weights_array = (PyArrayObject *)PyArray_FROM_OTF(
+      weights_list, NPY_FLOAT64, NPY_ARRAY_IN_ARRAY);
+  if (weights_array == NULL) {
+    PyErr_SetString(PyExc_TypeError,
+                    "Input must be a NumPy array of type float64.");
+    return NULL;
+  }
+
+  Slice const data = {.pointer = (char *)PyArray_DATA(data_array),
+                      .len = PyArray_SIZE(data_array),
+                      .item_size = sizeof(double)};
+  Slice const weights = {.pointer = (char *)PyArray_DATA(weights_array),
+                         .len = PyArray_SIZE(weights_array),
+                         .item_size = sizeof(double)};
+  double const result = weighted_mean(data, weights);
+
+  // Clean up
+  Py_DECREF(data_array);
+  Py_DECREF(weights_array);
+
+  // Return the sum as a Python float
+  return PyFloat_FromDouble(result);
+}
+
 // Method definitions
 static PyMethodDef MyMethods[] = {
     {"mean_list", (PyCFunction)mean_list, METH_VARARGS | METH_KEYWORDS,
      "Return mean of a NumPy array."},
     {"median_list", (PyCFunction)median_list, METH_VARARGS | METH_KEYWORDS,
      "Return median of a NumPy array."},
-    {"trim_mean", (PyCFunction)trim_mean_list,
-     METH_VARARGS | METH_KEYWORDS, "Return trim mean of a NumPy array."},
+    {"trim_mean", (PyCFunction)trim_mean_list, METH_VARARGS | METH_KEYWORDS,
+     "Return trim mean of a NumPy array."},
+    {"weighted_mean_list", (PyCFunction)weighted_mean_list,
+     METH_VARARGS | METH_KEYWORDS,
+     "Return mean with weights of a NumPy array."},
 
     {NULL, NULL, 0, NULL} // Sentinel
 };

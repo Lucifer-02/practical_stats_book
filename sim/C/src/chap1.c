@@ -67,7 +67,7 @@ double trim_mean(Slice const data, size_t const trim) {
   //                             .item_size = sizeof(double)};
   //
   Slice const trimmed_data =
-      get_slice(sorted_copy, trim, sorted_copy.len - trim);
+      make_slice(sorted_copy, trim, sorted_copy.len - trim);
 
   assert(trimmed_data.len == sorted_copy.len - 2 * trim &&
          "check valid trimmed");
