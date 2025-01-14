@@ -4,6 +4,7 @@ C_SOURCE_DIR= src
 PY_TEST_SOURCE = chap1_test.py
 PY_TEST_DIR = py_tests
 OUTPUT = chap1
+LIBS = -lm
 
 WARNINGS = -Wall -Wextra -pedantic
 FLAGS += $(WARNINGS) 

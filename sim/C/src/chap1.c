@@ -97,17 +97,39 @@ double weighted_mean(Slice const data, Slice const weights) {
   return weighted / sum_weights;
 }
 
+double var(Slice const data, size_t ddof) {
+  assert(data.len > 0);
+  assert(ddof < data.len &&
+         "degree of freedom delta is always < length of data");
+
+  double sum_squares = 0;
+  double const mean = mean_double(data);
+
+  for (size_t i = 0; i < data.len; ++i) {
+    sum_squares += pow(*(double *)get_item(data, i) - mean, 2);
+    assert(!isinf(sum_squares) && "overflow check");
+  }
+
+  return sum_squares / (data.len - ddof);
+}
+
+double std(Slice const data, size_t ddof) {
+  assert(data.len > 0);
+  assert(ddof < data.len &&
+         "degree of freedom delta is always < length of data");
+
+  return pow(var(data, ddof), 0.5);
+}
+
 // this main function for static analysis and quick test
 //
 // int main(void) {
 //
 //   double const arr[] = {0, 1, 2, 0};
-//   double const weights[] = {1, 1, 1, 1};
 //
-//   Slice const data = {.pointer = arr, .len = 4, .item_size = sizeof(double)};
-//   Slice const w = {.pointer = weights, .len = 4, .item_size =
-//   sizeof(double)};
+//   Slice const data = {
+//       .pointer = (char *)arr, .len = 4, .item_size = sizeof(double)};
 //
-//   printf("%lf\n", weighted_mean(data, w));
+//   printf("%lf\n", var(data, 1));
 //   return EXIT_SUCCESS;
 // }

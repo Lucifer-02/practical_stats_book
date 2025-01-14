@@ -15,7 +15,7 @@ extern inline void const *get_item(Slice const slice, size_t const index) {
   // disable for performance
   assert(slice.pointer != NULL);
   assert(index < slice.len);
-  return slice.pointer + index * (slice.item_size);
+  return (char *)slice.pointer + index * (slice.item_size);
 }
 
 Slice copy_slice(Slice const slice) {

@@ -71,3 +71,51 @@ class TestChap1(unittest.TestCase):
             mymodule.weighted_mean_list(data_list=data, weights=weights),
             delta=self.delta,
         )
+
+    def test_var_1(self):
+
+        SIZE = 1_000_000
+        data = np.random.rand(SIZE)
+        DDOF = 0
+
+        self.assertAlmostEqual(
+            np.var(data, ddof=DDOF),
+            mymodule.var_list(data_list=data, ddof=DDOF),
+            delta=self.delta,
+        )
+
+    def test_var_2(self):
+
+        SIZE = 1_00_000
+        data = np.random.rand(SIZE)
+        DDOF = 1
+
+        self.assertAlmostEqual(
+            np.var(data, ddof=DDOF),
+            mymodule.var_list(data_list=data, ddof=DDOF),
+            delta=self.delta,
+        )
+
+    def test_std_1(self):
+
+        SIZE = 1_00_000
+        data = np.random.rand(SIZE)
+        DDOF = 0
+
+        self.assertAlmostEqual(
+            np.std(data, ddof=DDOF),
+            mymodule.std_list(data_list=data, ddof=DDOF),
+            delta=self.delta,
+        )
+
+    def test_std_2(self):
+
+        SIZE = 1_000_000
+        data = np.random.rand(SIZE)
+        DDOF = 1
+
+        self.assertAlmostEqual(
+            np.std(data, ddof=DDOF),
+            mymodule.std_list(data_list=data, ddof=DDOF),
+            delta=self.delta,
+        )
