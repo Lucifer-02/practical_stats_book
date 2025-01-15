@@ -31,7 +31,7 @@ static PyObject *mean_list(PyObject *self, PyObject *args, PyObject *kwargs) {
   npy_intp const size = PyArray_SIZE(array);
   double const *const array_data = (double *)PyArray_DATA(array);
 
-  Slice const data = {
+  Data const data = {
       .pointer = (char *)array_data, .len = size, .item_size = sizeof(double)};
 
   double const m = mean_double(data);
@@ -72,7 +72,7 @@ static PyObject *trim_mean_list(PyObject *self, PyObject *args,
   npy_intp const size = PyArray_SIZE(array);
   double const *const array_data = (double *)PyArray_DATA(array);
 
-  Slice const data = {
+  Data const data = {
       .pointer = (char *)array_data, .len = size, .item_size = sizeof(double)};
   double const m = trim_mean(data, trim);
 
@@ -109,7 +109,7 @@ static PyObject *median_list(PyObject *self, PyObject *args, PyObject *kwargs) {
   // Get the number of elements
   npy_intp const size = PyArray_SIZE(array);
   double const *const array_data = (double *)PyArray_DATA(array);
-  Slice const data = {
+  Data const data = {
       .pointer = (char *)array_data, .len = size, .item_size = sizeof(double)};
 
   double const m = median_double(data);
@@ -151,10 +151,10 @@ static PyObject *weighted_mean_list(PyObject *self, PyObject *args,
     return NULL;
   }
 
-  Slice const data = {.pointer = (char *)PyArray_DATA(data_array),
+  Data const data = {.pointer = (char *)PyArray_DATA(data_array),
                       .len = PyArray_SIZE(data_array),
                       .item_size = sizeof(double)};
-  Slice const weights = {.pointer = (char *)PyArray_DATA(weights_array),
+  Data const weights = {.pointer = (char *)PyArray_DATA(weights_array),
                          .len = PyArray_SIZE(weights_array),
                          .item_size = sizeof(double)};
   double const result = weighted_mean(data, weights);
@@ -188,7 +188,7 @@ static PyObject *var_list(PyObject *self, PyObject *args, PyObject *kwargs) {
     return NULL;
   }
 
-  Slice const data = {.pointer = (char *)PyArray_DATA(data_array),
+  Data const data = {.pointer = (char *)PyArray_DATA(data_array),
                       .len = PyArray_SIZE(data_array),
                       .item_size = sizeof(double)};
   double const result = var(data, ddof);
@@ -221,7 +221,7 @@ static PyObject *std_list(PyObject *self, PyObject *args, PyObject *kwargs) {
     return NULL;
   }
 
-  Slice const data = {.pointer = (char *)PyArray_DATA(data_array),
+  Data const data = {.pointer = (char *)PyArray_DATA(data_array),
                       .len = PyArray_SIZE(data_array),
                       .item_size = sizeof(double)};
   double const result = std(data, ddof);
@@ -255,7 +255,7 @@ static PyObject *quantile_list(PyObject *self, PyObject *args,
     return NULL;
   }
 
-  Data const data = (Slice){.pointer = (char *)PyArray_DATA(data_array),
+  Data const data = (Data){.pointer = (char *)PyArray_DATA(data_array),
                             .len = PyArray_SIZE(data_array),
                             .item_size = sizeof(double)};
   double const result = quantile(data, q);

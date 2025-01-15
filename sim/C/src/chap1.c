@@ -21,63 +21,51 @@ Data make_data(Data const data, size_t low, size_t high) {
 }
 Data sorted_data(Data const data) { return sorted_slice(data); }
 
-double mean_double(Slice const data) {
+void free_data(Data const data) { free_slice(data); }
+
+double mean_double(Data const data) {
   assert(data.len >= 1);
 
   double sum = 0;
 
   for (size_t i = 0; i < data.len; ++i) {
-    sum += *(double *)get_item(data, i);
+    sum += *get_ele(data, i);
     assert(!isinf(sum) && "check overflow");
   }
 
   return sum / data.len;
 }
 
-double mean_int(Slice const data) {
+double median_double(Data const data) {
   assert(data.len >= 1);
 
-  long sum = 0;
-
-  for (size_t i = 0; i < data.len; ++i) {
-    long e = *(long *)get_item(data, i);
-    sum += e;
-    assert((sum + e) > sum && "check overflow");
-  }
-
-  return (double)sum / data.len;
-}
-
-double median_double(Slice const data) {
-  assert(data.len >= 1);
-
-  Slice const sorted_copy = sorted_slice(data);
+  Data const sorted_copy = sorted_slice(data);
 
   double median;
   if (data.len % 2 == 1) {
-    median = *(double *)get_item(sorted_copy, sorted_copy.len / 2);
+    median = *get_ele(sorted_copy, sorted_copy.len / 2);
   } else {
-    median = (*(double *)get_item(sorted_copy, sorted_copy.len / 2) +
-              *(double *)get_item(sorted_copy, sorted_copy.len / 2 - 1)) /
+    median = (*get_ele(sorted_copy, sorted_copy.len / 2) +
+              *get_ele(sorted_copy, sorted_copy.len / 2 - 1)) /
              2;
   }
 
-  free_slice(sorted_copy);
+  free_data(sorted_copy);
 
   assert(!isinf(median) && "check overflow");
   return median;
 }
 
-double trim_mean(Slice const data, size_t const trim) {
+double trim_mean(Data const data, size_t const trim) {
   assert(data.len > trim * 2 && "the trimming not over data length");
 
-  Slice const sorted_copy = sorted_slice(data);
+  Data const sorted_copy = sorted_slice(data);
 
-  // Slice const trimmed_data = {.pointer = sorted_copy + trim,
+  // Data const trimmed_data = {.pointer = sorted_copy + trim,
   //                             .len = len - 2 * trim,
   //                             .item_size = sizeof(double)};
   //
-  Slice const trimmed_data =
+  Data const trimmed_data =
       make_slice(sorted_copy, trim, sorted_copy.len - trim);
 
   assert(trimmed_data.len == sorted_copy.len - 2 * trim &&
@@ -85,12 +73,12 @@ double trim_mean(Slice const data, size_t const trim) {
 
   double const mean = mean_double(trimmed_data);
 
-  free_slice(sorted_copy);
+  free_data(sorted_copy);
 
   return mean;
 }
 
-double weighted_mean(Slice const data, Slice const weights) {
+double weighted_mean(Data const data, Slice const weights) {
 
   assert(data.len == weights.len && "each weight must belong to an entry");
 
@@ -98,9 +86,9 @@ double weighted_mean(Slice const data, Slice const weights) {
   double sum_weights = 0.0;
 
   for (size_t i = 0; i < data.len; ++i) {
-    weighted += *(double *)get_item(data, i) * *(double *)get_item(weights, i);
+    weighted += (*get_ele(data, i)) * (*get_ele(weights, i));
     assert(!isinf(weighted) && "overflow check");
-    sum_weights += *(double *)get_item(weights, i);
+    sum_weights += *get_ele(weights, i);
     assert(!isinf(sum_weights) && "overflow check");
   }
 
@@ -108,7 +96,7 @@ double weighted_mean(Slice const data, Slice const weights) {
   return weighted / sum_weights;
 }
 
-double var(Slice const data, size_t ddof) {
+double var(Data const data, size_t ddof) {
   assert(data.len > 0);
   assert(ddof < data.len &&
          "degree of freedom delta is always < length of data");
@@ -117,14 +105,14 @@ double var(Slice const data, size_t ddof) {
   double const mean = mean_double(data);
 
   for (size_t i = 0; i < data.len; ++i) {
-    sum_squares += pow(*(double *)get_item(data, i) - mean, 2);
+    sum_squares += pow(*get_ele(data, i) - mean, 2);
     assert(!isinf(sum_squares) && "overflow check");
   }
 
   return sum_squares / (data.len - ddof);
 }
 
-double std(Slice const data, size_t ddof) {
+double std(Data const data, size_t ddof) {
   assert(data.len > 0);
   assert(ddof < data.len &&
          "degree of freedom delta is always < length of data");
@@ -150,7 +138,11 @@ double quantile(Data const data, double const q) {
   double const g = modf(q * (data.len - 1), &j);
   assert(j >= 0);
 
-  return (1 - g) * (*get_ele(sorted, j)) + g * (*get_ele(sorted, j + 1));
+  double const result =
+      (1 - g) * (*get_ele(sorted, j)) + g * (*get_ele(sorted, j + 1));
+
+  free_data(sorted);
+  return result;
 }
 
 // this main function for static analysis and quick test
