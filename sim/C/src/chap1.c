@@ -118,7 +118,7 @@ double std(Slice const data, size_t ddof) {
   assert(ddof < data.len &&
          "degree of freedom delta is always < length of data");
 
-  return pow(var(data, ddof), 0.5);
+  return sqrt(var(data, ddof));
 }
 
 // this main function for static analysis and quick test
