@@ -112,6 +112,24 @@ void test_std_2(void) {
                           0.9574271077563381, EPSILON));
 }
 
+void test_quantile_1(void) {
+  double const arr[] = {1, 2, 3, 4};
+  Data const data = {
+      .pointer = (char *)arr, .len = 4, .item_size = sizeof(double)};
+  double const q = 0.25;
+
+  assert(are_almost_equal(quantile(data, q), 1.75, EPSILON));
+}
+
+void test_quantile_2(void) {
+  double const arr[] = {1, 2, 0, 0};
+  Data const data = {
+      .pointer = (char *)arr, .len = 4, .item_size = sizeof(double)};
+  double const q = 0.5;
+
+  assert(are_almost_equal(quantile(data, q), 0.5, EPSILON));
+}
+
 int main(void) {
   test_mean_int_1();
   test_mean_double_1();
@@ -123,4 +141,6 @@ int main(void) {
   test_var_2();
   test_std_1();
   test_std_2();
+  test_quantile_1();
+  test_quantile_2();
 }

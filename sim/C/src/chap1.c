@@ -7,8 +7,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-// #include "mylib/common.c"
 #include "mylib/slice.c"
+
+typedef Slice Data;
+
+double const *get_ele(Data const data, size_t const index) {
+  return (double *)get_item(data, index);
+}
+Data copy_data(Data const data) { return copy_slice(data); }
+void qsort_data(Data const data) { qsort_slice(data); }
+Data make_data(Data const data, size_t low, size_t high) {
+  return make_slice(data, low, high);
+}
+Data sorted_data(Data const data) { return sorted_slice(data); }
 
 double mean_double(Slice const data) {
   assert(data.len >= 1);
@@ -121,15 +132,36 @@ double std(Slice const data, size_t ddof) {
   return sqrt(var(data, ddof));
 }
 
+bool is_percent(double const percent) {
+  if (percent > 0.0 && percent < 1.0) {
+    return true;
+  }
+  return false;
+}
+
+// ref: https://numpy.org/doc/2.1/reference/generated/numpy.quantile.html
+double quantile(Data const data, double const q) {
+  assert(data.len > 0);
+  assert(is_percent(q));
+
+  Data sorted = sorted_data(data);
+
+  double j = -1; // -1 is dummy number to check
+  double const g = modf(q * (data.len - 1), &j);
+  assert(j >= 0);
+
+  return (1 - g) * (*get_ele(sorted, j)) + g * (*get_ele(sorted, j + 1));
+}
+
 // this main function for static analysis and quick test
-//
+
 // int main(void) {
 //
-//   double const arr[] = {0, 1, 2, 0};
+//   double const arr[] = {1, 2, 3, 4};
 //
-//   Slice const data = {
+//   Data const data = {
 //       .pointer = (char *)arr, .len = 4, .item_size = sizeof(double)};
 //
-//   printf("%lf\n", var(data, 1));
+//   printf("%lf\n", quantile(data, 0.25));
 //   return EXIT_SUCCESS;
 // }

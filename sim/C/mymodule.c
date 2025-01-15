@@ -233,6 +233,39 @@ static PyObject *std_list(PyObject *self, PyObject *args, PyObject *kwargs) {
   return PyFloat_FromDouble(result);
 }
 
+static PyObject *quantile_list(PyObject *self, PyObject *args,
+                               PyObject *kwargs) {
+  // Define argument names (must be NULL-terminated)
+  static char *kwlist[] = {"data_list", "q", NULL};
+
+  PyObject *data_list = NULL;
+  double q = 0;
+
+  // Parse positional and keyword arguments
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Od", kwlist, &data_list,
+                                   &q)) {
+    return NULL; // Signal an error
+  }
+
+  PyArrayObject *data_array = (PyArrayObject *)PyArray_FROM_OTF(
+      data_list, NPY_FLOAT64, NPY_ARRAY_IN_ARRAY);
+  if (data_array == NULL) {
+    PyErr_SetString(PyExc_TypeError,
+                    "Input must be a NumPy array of type float64.");
+    return NULL;
+  }
+
+  Data const data = (Slice){.pointer = (char *)PyArray_DATA(data_array),
+                            .len = PyArray_SIZE(data_array),
+                            .item_size = sizeof(double)};
+  double const result = quantile(data, q);
+
+  // Clean up
+  Py_DECREF(data_array);
+
+  // Return the sum as a Python float
+  return PyFloat_FromDouble(result);
+}
 // Method definitions
 static PyMethodDef MyMethods[] = {
     {"mean_list", (PyCFunction)mean_list, METH_VARARGS | METH_KEYWORDS,
@@ -249,6 +282,8 @@ static PyMethodDef MyMethods[] = {
     {"std_list", (PyCFunction)std_list, METH_VARARGS | METH_KEYWORDS,
      "Return standard diviation with degree of freedom(delta) of a NumPy "
      "array."},
+    {"quantile_list", (PyCFunction)quantile_list, METH_VARARGS | METH_KEYWORDS,
+     "Compute the q-th quantile of the data "},
     {NULL, NULL, 0, NULL} // Sentinel
 };
 

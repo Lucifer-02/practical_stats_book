@@ -119,3 +119,27 @@ class TestChap1(unittest.TestCase):
             mymodule.std_list(data_list=data, ddof=DDOF),
             delta=self.delta,
         )
+
+    def test_quantile_1(self):
+
+        SIZE = 1_000_000
+        data = np.random.rand(SIZE)
+        Q = 0.25
+
+        self.assertAlmostEqual(
+            np.quantile(data, q=Q),
+            mymodule.quantile_list(data_list=data, q=Q),
+            delta=self.delta,
+        )
+
+    def test_quantile_2(self):
+
+        SIZE = 1_000_123
+        data = np.random.rand(SIZE)
+        Q = 0.75
+
+        self.assertAlmostEqual(
+            np.quantile(data, q=Q),
+            mymodule.quantile_list(data_list=data, q=Q),
+            delta=self.delta,
+        )
