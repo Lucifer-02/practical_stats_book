@@ -11,12 +11,12 @@
 
 - [x] Mean
 - [x] Median and Robust Estimates
-- [ ] Example: Location Estimates of Population and Murder Rates
+- [x] Example: Location Estimates of Population and Murder Rates
 
 ### Estimates of Variability
 
-- [ ] Standard Deviation and Related Estimates
-- [ ] Estimates Based on Percentiles
+- [x] Standard Deviation and Related Estimates
+- [x] Estimates Based on Percentiles
 - [ ] Example: Variability Estimates of State Population
 
 ### Exploring the Data Distribution
