@@ -152,11 +152,11 @@ static PyObject *weighted_mean_list(PyObject *self, PyObject *args,
   }
 
   Data const data = {.pointer = (char *)PyArray_DATA(data_array),
-                      .len = PyArray_SIZE(data_array),
-                      .item_size = sizeof(double)};
+                     .len = PyArray_SIZE(data_array),
+                     .item_size = sizeof(double)};
   Data const weights = {.pointer = (char *)PyArray_DATA(weights_array),
-                         .len = PyArray_SIZE(weights_array),
-                         .item_size = sizeof(double)};
+                        .len = PyArray_SIZE(weights_array),
+                        .item_size = sizeof(double)};
   double const result = weighted_mean(data, weights);
 
   // Clean up
@@ -189,8 +189,8 @@ static PyObject *var_list(PyObject *self, PyObject *args, PyObject *kwargs) {
   }
 
   Data const data = {.pointer = (char *)PyArray_DATA(data_array),
-                      .len = PyArray_SIZE(data_array),
-                      .item_size = sizeof(double)};
+                     .len = PyArray_SIZE(data_array),
+                     .item_size = sizeof(double)};
   double const result = var(data, ddof);
 
   // Clean up
@@ -222,8 +222,8 @@ static PyObject *std_list(PyObject *self, PyObject *args, PyObject *kwargs) {
   }
 
   Data const data = {.pointer = (char *)PyArray_DATA(data_array),
-                      .len = PyArray_SIZE(data_array),
-                      .item_size = sizeof(double)};
+                     .len = PyArray_SIZE(data_array),
+                     .item_size = sizeof(double)};
   double const result = std(data, ddof);
 
   // Clean up
@@ -256,8 +256,8 @@ static PyObject *quantile_list(PyObject *self, PyObject *args,
   }
 
   Data const data = (Data){.pointer = (char *)PyArray_DATA(data_array),
-                            .len = PyArray_SIZE(data_array),
-                            .item_size = sizeof(double)};
+                           .len = PyArray_SIZE(data_array),
+                           .item_size = sizeof(double)};
   double const result = quantile(data, q);
 
   // Clean up
